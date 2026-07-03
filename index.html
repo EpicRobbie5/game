@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mijn Eerste Browser Game</title>
+    <style>
+        body {
+            margin: 0;
+            background-color: #0b0f19;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: sans-serif;
+            color: white;
+        }
+        canvas {
+            border: 4px solid #4169E1; /* Royal Dark Blue rand */
+            background-color: #161f33;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="gameCanvas" width="500" height="500"></canvas>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // De eigenschappen van onze speler
+        let player = {
+            x: 230,
+            y: 230,
+            size: 40,
+            speed: 5,
+            color: '#4169E1' // Koningsblauw
+        };
+
+        // Object om bij te houden welke toetsen zijn ingedrukt
+        let keys = {};
+
+        // Luisteren naar het toetsenbord
+        window.addEventListener('keydown', (e) => {
+            keys[e.key] = true;
+        });
+
+        window.addEventListener('keyup', (e) => {
+            keys[e.key] = false;
+        });
+
+        // Update de logica (posities, botsingen, etc.)
+        function update() {
+            if (keys['ArrowUp'] && player.y > 0) {
+                player.y -= player.speed;
+            }
+            if (keys['ArrowDown'] && player.y < canvas.height - player.size) {
+                player.y += player.speed;
+            }
+            if (keys['ArrowLeft'] && player.x > 0) {
+                player.x -= player.speed;
+            }
+            if (keys['ArrowRight'] && player.x < canvas.width - player.size) {
+                player.x += player.speed;
+            }
+        }
+
+        // Teken alles op het scherm
+        function draw() {
+            // Maak het canvas eerst leeg
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Teken de speler
+            ctx.fillStyle = player.color;
+            ctx.fillRect(player.x, player.y, player.size, player.size);
+        }
+
+        // De oneindige game loop
+        function gameLoop() {
+            update();
+            draw();
+            // requestAnimationFrame zorgt voor een vloeiende 60fps rendering
+            requestAnimationFrame(gameLoop);
+        }
+
+        // Start de game!
+        gameLoop();
+    </script>
+</body>
+</html>
